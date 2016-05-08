@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <script>
+      //  window.onload = begin;
+        loop = setInterval(begin, 1000);
+        window.onresize = resize;
+        window.onload = resize;
+        function resize()
+        {
+            document.getElementById("img").width = window.innerWidth;
+            document.getElementById("img").height = window.innerHeight;
+        }
+        function begin()
+        {
+            var canvas = document.getElementById("canvas");
+            var context = canvas.getContext("2d");
+            context.clearRect(0, 0, 500, 500);
+            context.globalAlpha = 1;
+            drawcenter(context);
+            drawclockplate(context);
+            context.globalAlpha = 0.4;
+            drawhour(context);
+            drawminute(context);
+            drawsecond(context);
+            document.getElementById("img").src = canvas.toDataURL();
+        }
+        function drawcenter(context)
+        {
+            context.beginPath();
+            context.save()
+            context.lineWidth = 8;
+            context.arc(250,250,10,0,Math.PI*2,true);
+            context.stroke();
+            context.restore();
+         }
+        function drawhour(context)
+        {
+            var date = new Date();
+            var hour = date.getHours();
+            hour = hour > 12 ? hour - 12 : hour;
+            context.beginPath();
+            var angle = hour * Math.PI / 6
+            context.save()
+            context.lineWidth = 12;
+            context.transform(Math.cos(angle), Math.sin(angle), -Math.sin(angle), Math.cos(angle), 250, 250);
+            context.moveTo(0, 0);
+            context.lineTo(0,-100);
+            context.stroke();
+            context.restore();
+        }
+        function drawminute(context)
+        {
+            var date = new Date();
+            var minute = date.getMinutes();
+            context.beginPath();
+            var angle = minute * Math.PI / 30
+            context.save()
+            context.lineWidth = 8;
+            context.transform(Math.cos(angle), Math.sin(angle), -Math.sin(angle), Math.cos(angle), 250, 250);
+            context.moveTo(0, 0);
+            context.lineTo(0, -140);
+            context.stroke();
+            context.restore();
+        }
+        function drawsecond(context)
+        {
+            var date = new Date();
+            var second = date.getSeconds();
+            context.beginPath();
+            var angle = second * Math.PI / 30
+            context.save()
+            context.lineWidth = 4;
+            context.transform(Math.cos(angle), Math.sin(angle), -Math.sin(angle), Math.cos(angle), 250, 250);
+            context.moveTo(0, 0);
+            context.lineTo(0, -180);
+            context.stroke();
+            context.restore();
+        }
+        function drawclockplate(context)
+        {
+            clockcircle(context);
+            context.save();
+            context.translate(250, 250);
+            clocknumber(context, 230);
+            context.restore();
+        }
+        function clockcircle(context)
+        {
+            context.beginPath();
+            context.save();
+            context.lineWidth = 10;
+            context.arc(250, 250, 200, 0, Math.PI * 2, true);
+            context.stroke();
+            context.restore();
+        }
+        function timenumber(context,number,radius,angle)
+        {
+            context.save();
+            context.textAlign = "center";
+            context.textBaseline = "middle";
+            context.font = "30px impact";
+            context.transform(Math.cos(angle), Math.sin(angle), -Math.sin(angle), Math.cos(angle), 0, 0);
+            context.translate(0, -radius);
+            context.transform(Math.cos(-angle), Math.sin(-angle), -Math.sin(-angle), Math.cos(-angle), 0, 0);
+            context.fillText(number, 0, 0);
+            context.stroke();
+            context.restore();            
+        }
+        function clocknumber(context,radius)
+        {
+            timenumber(context, "1", radius, Math.PI * 1 / 6);
+            timenumber(context, "2", radius, Math.PI * 2 / 6);
+            timenumber(context, "3", radius, Math.PI * 3 / 6);
+            timenumber(context, "4", radius, Math.PI * 4 / 6);
+            timenumber(context, "5", radius, Math.PI * 5 / 6);
+            timenumber(context, "6", radius, Math.PI * 6 / 6);
+            timenumber(context, "7", radius, Math.PI * 7 / 6);
+            timenumber(context, "8", radius, Math.PI * 8 / 6);
+            timenumber(context, "9", radius, Math.PI * 9 / 6);
+            timenumber(context, "10", radius, Math.PI * 10 / 6);
+            timenumber(context, "11", radius, Math.PI * 11 / 6);
+            timenumber(context, "12", radius, Math.PI * 12 / 6);
+        }
+    </script>
+    <img id="img" />
+    <canvas id="canvas" height="500"width="500" style="display:none">不支持canvas</canvas>
+</body>
